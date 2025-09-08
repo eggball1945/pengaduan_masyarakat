@@ -4,10 +4,21 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-
+use App\Models\Petugas;
 
 class AdminAuthController extends Controller
 {
+    /**
+     * Tampilkan halaman login admin/petugas
+     */
+    public function showLogin()
+    {
+        return view('admin.login');
+    }
+
+    /**
+     * Proses login admin / petugas
+     */
     public function login(Request $request)
     {
         $request->validate([
@@ -15,27 +26,49 @@ class AdminAuthController extends Controller
             'password' => 'required|string',
         ]);
 
-    $credentials = $request->only('username', 'password');
+        // Logout semua guard dulu
+        Auth::guard('admin')->logout();
+        Auth::guard('petugas')->logout();
 
-    dd(Auth::guard('petugas')->attempt($credentials));
+        // Cari user berdasarkan username & password plain
+        $user = Petugas::where('username', $request->username)
+                       ->where('password', $request->password)
+                       ->first();
 
-    if (Auth::guard('petugas')->attempt($credentials)) {
-        $request->session()->regenerate();
-
-        $petugas = Auth::guard('petugas')->user();
-        if ($petugas->level === 'admin' || $petugas->level === 'petugas') {
-            return redirect()->route('admin.dashboard')->with('success', 'Login admin berhasil!');
-        } else {
-            Auth::guard('petugas')->logout();
-            return redirect('/')->with('error', 'Akses ditolak. Anda bukan admin/petugas.');
+        if (!$user) {
+            return back()->with('error', 'Username atau password salah');
         }
+
+        // Login berdasarkan level
+        if ($user->level === 'admin') {
+            Auth::guard('admin')->login($user);
+            $request->session()->regenerate();
+            return redirect()->route('admin.dashboard');
+        }
+
+        if ($user->level === 'petugas') {
+            Auth::guard('petugas')->login($user);
+            $request->session()->regenerate();
+            return redirect()->route('petugas.dashboard');
+        }
+
+        return back()->with('error', 'Level user tidak valid');
     }
 
-    return redirect('admin.dashboard')->with('error', 'Username atau password admin salah.');
-}
-
-    public function dashboard()
+    /**
+     * Logout admin / petugas
+     */
+    public function logout(Request $request)
     {
-        return view('admin.dashboard');
+        if (Auth::guard('admin')->check()) {
+            Auth::guard('admin')->logout();
+        } elseif (Auth::guard('petugas')->check()) {
+            Auth::guard('petugas')->logout();
+        }
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect()->route('admin.login')->with('success', 'Berhasil logout.');
     }
 }

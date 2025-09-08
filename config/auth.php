@@ -3,24 +3,37 @@
 return [
 
     'defaults' => [
-        'guard' => 'web', // Default tetap 'web' untuk masyarakat
-        'passwords' => 'users',
+        'guard' => 'web', // default guard untuk masyarakat
+        'passwords' => 'masyarakat',
     ],
 
     'guards' => [
-    'web' => [
-        'driver' => 'session',
-        'provider' => 'users',
-    ],
+        // Guard default web (masyarakat)
+        'web' => [
+            'driver' => 'session',
+            'provider' => 'masyarakat',
+        ],
 
-    'petugas' => [
-        'driver' => 'session',
-        'provider' => 'petugas',
+        'masyarakat' => [
+            'driver' => 'session',
+            'provider' => 'masyarakat',
+        ],
+
+        // Guard admin (dari table petugas)
+        'admin' => [
+            'driver' => 'session',
+            'provider' => 'petugas',
+        ],
+
+        // Guard petugas (dari table petugas)
+        'petugas' => [
+            'driver' => 'session',
+            'provider' => 'petugas',
         ],
     ],
 
     'providers' => [
-        'users' => [
+        'masyarakat' => [
             'driver' => 'eloquent',
             'model' => App\Models\Masyarakat::class,
         ],
@@ -32,14 +45,28 @@ return [
     ],
 
     'passwords' => [
-        'users' => [
-            'provider' => 'users',
+        'masyarakat' => [
+            'provider' => 'masyarakat',
+            'table' => 'password_reset_tokens',
+            'expire' => 60,
+            'throttle' => 60,
+        ],
+
+        'petugas' => [
+            'provider' => 'petugas',
+            'table' => 'password_reset_tokens',
+            'expire' => 60,
+            'throttle' => 60,
+        ],
+
+        'admin' => [
+            'provider' => 'petugas',
             'table' => 'password_reset_tokens',
             'expire' => 60,
             'throttle' => 60,
         ],
     ],
-    
+
     'password_timeout' => 10800,
 
 ];

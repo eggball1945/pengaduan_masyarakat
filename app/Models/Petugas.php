@@ -10,7 +10,10 @@ class Petugas extends Authenticatable
     use Notifiable;
 
     protected $table = 'tb_petugas';
-    protected $primaryKey = 'id_petugas'; // 👈 Tambahkan ini
+    protected $primaryKey = 'id_petugas';
+    public $incrementing = true;
+    protected $keyType = 'int';
+    public $timestamps = false;
 
     protected $fillable = [
         'nama_petugas',
@@ -23,4 +26,12 @@ class Petugas extends Authenticatable
     protected $hidden = [
         'password',
     ];
+
+    /**
+     * Relasi ke tanggapan.
+     */
+    public function tanggapan()
+    {
+        return $this->hasMany(Tanggapan::class, 'id_petugas', 'id_petugas');
+    }
 }
