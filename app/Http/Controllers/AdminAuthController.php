@@ -26,11 +26,7 @@ class AdminAuthController extends Controller
             'password' => 'required|string',
         ]);
 
-        // Logout semua guard dulu
-        Auth::guard('admin')->logout();
-        Auth::guard('petugas')->logout();
-
-        // Cari user berdasarkan username & password plain
+        // Cari user berdasarkan username & password (plain text)
         $user = Petugas::where('username', $request->username)
                        ->where('password', $request->password)
                        ->first();
@@ -39,7 +35,7 @@ class AdminAuthController extends Controller
             return back()->with('error', 'Username atau password salah');
         }
 
-        // Login berdasarkan level
+        // Login sesuai level
         if ($user->level === 'admin') {
             Auth::guard('admin')->login($user);
             $request->session()->regenerate();

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Pengaduan;
+use App\Models\Tanggapan;
 use Illuminate\Support\Facades\Storage;
 
 class PengaduanController extends Controller
@@ -20,8 +21,8 @@ class PengaduanController extends Controller
     // ==========================
     public function index()
     {
+        // Semua pengaduan ditampilkan
         $pengaduans = Pengaduan::with('tanggapan.petugas')
-            ->where('nik', Auth::guard('masyarakat')->user()->nik)
             ->orderBy('tgl_pengaduan', 'desc')
             ->get();
 
@@ -37,19 +38,24 @@ class PengaduanController extends Controller
     {
         $request->validate([
             'isi_laporan' => 'required|string',
-            'foto'        => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'foto.*'      => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        $fotoPath = $request->hasFile('foto')
-            ? $request->file('foto')->store('pengaduan_foto', 'public')
-            : null;
-
         $user = Auth::guard('masyarakat')->user();
+
+        $fotoPaths = null;
+        if ($request->hasFile('foto')) {
+            $paths = [];
+            foreach ($request->file('foto') as $file) {
+                $paths[] = $file->store('pengaduan_foto', 'public');
+            }
+            $fotoPaths = json_encode($paths);
+        }
 
         Pengaduan::create([
             'nik'           => $user->nik,
             'isi_laporan'   => $request->isi_laporan,
-            'foto'          => $fotoPath,
+            'foto'          => $fotoPaths,
             'tgl_pengaduan' => now(),
             'status'        => '0',
         ]);
@@ -71,42 +77,88 @@ class PengaduanController extends Controller
 
     public function update(Request $request, $id)
     {
-        $request->validate([
-            'isi_laporan' => 'required|string',
-            'foto'        => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-        ]);
-
         $pengaduan = Pengaduan::findOrFail($id);
 
-        if (Auth::guard('masyarakat')->check() &&
-            $pengaduan->nik !== Auth::guard('masyarakat')->user()->nik) {
-            abort(403, 'Tidak boleh mengedit pengaduan orang lain.');
-        }
-
-        if ($request->hasFile('foto')) {
-            if ($pengaduan->foto) {
-                Storage::disk('public')->delete($pengaduan->foto);
+        // Update oleh masyarakat
+        if (Auth::guard('masyarakat')->check()) {
+            if ($pengaduan->nik !== Auth::guard('masyarakat')->user()->nik) {
+                abort(403, 'Tidak boleh mengedit pengaduan orang lain.');
             }
-            $pengaduan->foto = $request->file('foto')->store('pengaduan_foto', 'public');
+
+            $request->validate([
+                'isi_laporan' => 'required|string',
+                'foto.*'      => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            ]);
+
+            if ($request->hasFile('foto')) {
+                if ($pengaduan->foto) {
+                    $oldFiles = json_decode($pengaduan->foto, true) ?? [];
+                    foreach ($oldFiles as $old) {
+                        Storage::disk('public')->delete($old);
+                    }
+                }
+
+                $paths = [];
+                foreach ($request->file('foto') as $file) {
+                    $paths[] = $file->store('pengaduan_foto', 'public');
+                }
+                $pengaduan->foto = json_encode($paths);
+            }
+
+            $pengaduan->isi_laporan = $request->isi_laporan;
+            $pengaduan->save();
+
+            return redirect()->route('pengaduan.index')->with('success', 'Pengaduan berhasil diperbarui!');
         }
 
-        $pengaduan->isi_laporan = $request->isi_laporan;
-        $pengaduan->save();
+        // Update oleh admin/petugas → status + tanggapan
+        if (Auth::guard('admin')->check() || Auth::guard('petugas')->check()) {
+            $request->validate([
+                'status'     => 'required|in:0,proses,selesai',
+                'tanggapan'  => 'nullable|string',
+            ]);
 
-        return redirect()->route('pengaduan.index')->with('success', 'Pengaduan berhasil diperbarui!');
+            $pengaduan->status = $request->status;
+            $pengaduan->save();
+
+            // update atau buat tanggapan
+            $petugas = Auth::guard('admin')->user() ?? Auth::guard('petugas')->user();
+
+            Tanggapan::updateOrCreate(
+                ['id_pengaduan' => $pengaduan->id_pengaduan],
+                [
+                    'tgl_tanggapan' => now(),
+                    'tanggapan'     => $request->tanggapan,
+                    'id_petugas'    => $petugas->id_petugas,
+                ]
+            );
+
+            return back()->with('success', 'Pengaduan & tanggapan berhasil diperbarui!');
+        }
+
+        abort(403, 'Akses ditolak.');
     }
 
+    // ==========================
+    // HAPUS PENGADUAN
+    // ==========================
     public function destroy($id)
     {
         $pengaduan = Pengaduan::findOrFail($id);
 
+        // Masyarakat hanya boleh hapus miliknya sendiri
         if (Auth::guard('masyarakat')->check() &&
             $pengaduan->nik !== Auth::guard('masyarakat')->user()->nik) {
             abort(403, 'Tidak boleh menghapus pengaduan orang lain.');
         }
 
+        // Admin/petugas boleh hapus semua
+        // Hapus file foto jika ada
         if ($pengaduan->foto) {
-            Storage::disk('public')->delete($pengaduan->foto);
+            $oldFiles = json_decode($pengaduan->foto, true) ?? [];
+            foreach ($oldFiles as $old) {
+                Storage::disk('public')->delete($old);
+            }
         }
 
         $pengaduan->delete();

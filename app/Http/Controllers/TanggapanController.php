@@ -14,21 +14,19 @@ class TanggapanController extends Controller
         $this->middleware('auth:admin,petugas');
     }
 
-    /**
-     * Tampilkan semua pengaduan dengan tanggapan
-     */
     public function index()
     {
         $pengaduans = Pengaduan::with(['tanggapan.petugas', 'masyarakat'])
             ->orderBy('tgl_pengaduan', 'desc')
-            ->get();
+            ->get()
+            ->map(function ($item) {
+                $item->foto_array = $item->foto ? json_decode($item->foto, true) : [];
+                return $item;
+            });
 
         return view('admin.tanggapan', compact('pengaduans'));
     }
 
-    /**
-     * Tambah atau update tanggapan
-     */
     public function updateOrStore(Request $request, $id_pengaduan)
     {
         $request->validate([
@@ -37,31 +35,17 @@ class TanggapanController extends Controller
 
         $pengaduan = Pengaduan::findOrFail($id_pengaduan);
 
-        // Tentukan petugas berdasarkan guard login
-        $petugas_id = Auth::guard('admin')->check() 
-                        ? Auth::guard('admin')->id() 
-                        : Auth::guard('petugas')->id();
+        $petugas = Auth::guard('admin')->user() ?? Auth::guard('petugas')->user();
 
-        $tanggapan = $pengaduan->tanggapan;
-
-        if ($tanggapan) {
-            // Update tanggapan
-            $tanggapan->update([
-                'tanggapan'     => $request->tanggapan,
-                'tgl_tanggapan' => now(),
-                'id_petugas'    => $petugas_id,
-            ]);
-        } else {
-            // Buat tanggapan baru
-            Tanggapan::create([
-                'id_pengaduan'  => $pengaduan->id_pengaduan,
+        Tanggapan::updateOrCreate(
+            ['id_pengaduan' => $pengaduan->id_pengaduan],
+            [
                 'tgl_tanggapan' => now(),
                 'tanggapan'     => $request->tanggapan,
-                'id_petugas'    => $petugas_id,
-            ]);
-        }
+                'id_petugas'    => $petugas->id_petugas,
+            ]
+        );
 
-        // Jika status sebelumnya '0', otomatis ubah ke 'proses'
         if ($pengaduan->status === '0') {
             $pengaduan->update(['status' => 'proses']);
         }
@@ -69,9 +53,6 @@ class TanggapanController extends Controller
         return redirect()->back()->with('success', 'Tanggapan berhasil disimpan.');
     }
 
-    /**
-     * Hapus tanggapan
-     */
     public function destroy($id)
     {
         $tanggapan = Tanggapan::findOrFail($id);
@@ -79,17 +60,13 @@ class TanggapanController extends Controller
 
         $tanggapan->delete();
 
-        // Jika tidak ada tanggapan tersisa, set status pengaduan ke '0'
-        if ($pengaduan && $pengaduan->tanggapan()->count() === 0) {
+        if ($pengaduan && !$pengaduan->tanggapan) {
             $pengaduan->update(['status' => '0']);
         }
 
         return redirect()->back()->with('success', 'Tanggapan berhasil dihapus.');
     }
 
-    /**
-     * Update status pengaduan
-     */
     public function updateStatus(Request $request, $id_pengaduan)
     {
         $request->validate([

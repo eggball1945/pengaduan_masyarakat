@@ -15,7 +15,7 @@ use App\Http\Controllers\LaporanController;
 |--------------------------------------------------------------------------
 */
 Route::get('/', [HomeController::class, 'index'])->name('landing');
-Route::get('/login', fn () => redirect()->route('landing'))->name('login');
+Route::get('/login', fn () => redirect()->route('landing'))->name('login'); 
 
 /*
 |--------------------------------------------------------------------------
@@ -31,6 +31,7 @@ Route::middleware('auth:masyarakat')->group(function () {
     Route::get('/home', [HomeController::class, 'index'])->name('home');
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
+    // CRUD Pengaduan untuk masyarakat
     Route::resource('pengaduan', PengaduanController::class)->except(['show']);
     Route::get('/log-pengaduan', [PengaduanController::class, 'index'])->name('log.pengaduan');
 });
@@ -62,19 +63,18 @@ Route::prefix('admin')->name('admin.')->middleware('auth:admin')->group(function
 
     // Pengaduan CRUD & Actions
     Route::get('/pengaduan', [PengaduanController::class, 'indexAdmin'])->name('pengaduan.index');
-    Route::get('/pengaduan/{id}/edit', [PengaduanController::class, 'edit'])->name('pengaduan.edit');
     Route::put('/pengaduan/{id}', [PengaduanController::class, 'update'])->name('pengaduan.update');
     Route::delete('/pengaduan/{id}', [PengaduanController::class, 'destroy'])->name('pengaduan.destroy');
     Route::post('/pengaduan/{id}/verifikasi', [PengaduanController::class, 'verifikasi'])->name('pengaduan.verifikasi');
     Route::post('/pengaduan/{id}/selesai', [PengaduanController::class, 'selesai'])->name('pengaduan.selesai');
 
-    // Tanggapan CRUD
+    // Tanggapan CRUD (jika ingin terpisah)
     Route::get('/tanggapan', [TanggapanController::class, 'index'])->name('tanggapan.index');
-    Route::put('/tanggapan/{id_pengaduan}', [TanggapanController::class, 'storeOrUpdate'])->name('tanggapan.update');
+    Route::put('/tanggapan/{id_pengaduan}', [TanggapanController::class, 'updateOrStore'])->name('tanggapan.update');
     Route::delete('/tanggapan/{id}', [TanggapanController::class, 'destroy'])->name('tanggapan.destroy');
     Route::patch('/tanggapan/{id_pengaduan}/status', [TanggapanController::class, 'updateStatus'])->name('tanggapan.status');
 
-    // Petugas CRUD
+    // Petugas CRUD (dikelola admin)
     Route::get('/register', [StaffController::class, 'indexPetugas'])->name('register'); 
     Route::post('/register', [StaffController::class, 'storePetugas'])->name('register.post'); 
     Route::get('/register/{id}/edit', [StaffController::class, 'editPetugas'])->name('register.edit'); 
@@ -99,15 +99,14 @@ Route::prefix('petugas')->name('petugas.')->middleware('auth:petugas')->group(fu
 
     // Pengaduan CRUD & Actions
     Route::get('/pengaduan', [PengaduanController::class, 'indexPetugas'])->name('pengaduan.index');
-    Route::get('/pengaduan/{id}/edit', [PengaduanController::class, 'edit'])->name('pengaduan.edit');
     Route::put('/pengaduan/{id}', [PengaduanController::class, 'update'])->name('pengaduan.update');
     Route::delete('/pengaduan/{id}', [PengaduanController::class, 'destroy'])->name('pengaduan.destroy');
     Route::post('/pengaduan/{id}/verifikasi', [PengaduanController::class, 'verifikasi'])->name('pengaduan.verifikasi');
     Route::post('/pengaduan/{id}/selesai', [PengaduanController::class, 'selesai'])->name('pengaduan.selesai');
 
-    // Tanggapan CRUD
+    // Tanggapan CRUD (jika ingin terpisah)
     Route::get('/tanggapan', [TanggapanController::class, 'index'])->name('tanggapan.index');
-    Route::put('/tanggapan/{id_pengaduan}', [TanggapanController::class, 'storeOrUpdate'])->name('tanggapan.update');
+    Route::put('/tanggapan/{id_pengaduan}', [TanggapanController::class, 'updateOrStore'])->name('tanggapan.update');
     Route::delete('/tanggapan/{id}', [TanggapanController::class, 'destroy'])->name('tanggapan.destroy');
     Route::patch('/tanggapan/{id_pengaduan}/status', [TanggapanController::class, 'updateStatus'])->name('tanggapan.status');
 });

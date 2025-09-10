@@ -3,41 +3,83 @@
 <head>
     <meta charset="UTF-8">
     <title>@yield('title', 'Admin Panel - Pengaduan Masyarakat')</title>
+    <link rel="icon" href="{{ asset('images/logo.png') }}" type="image/png">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 
     <style>
-        body { overflow-x: hidden; background: #f5f6fa; }
-        /* Sidebar */
+        body {
+            overflow-x: hidden;
+            background: #f5f6fa;
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* Sidebar Modern */
         .sidebar {
-            width: 250px;
+            width: 240px;
             position: fixed;
             top: 0; left: 0;
             height: 100vh;
             background: #fff;
             border-right: 1px solid #ddd;
-            padding: 20px;
+            padding: 20px 15px;
+            transition: width 0.3s ease;
         }
+        .sidebar .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: #495057;
+            font-weight: 500;
+            padding: 0.55rem 0.75rem;
+            border-radius: 0.6rem;
+            transition: all 0.3s ease;
+        }
+        .sidebar .nav-link i {
+            font-size: 1.2rem;
+            transition: transform 0.3s ease, color 0.3s ease;
+        }
+        .sidebar .nav-link:hover {
+            background-color: #e7f1ff;
+            color: #0d6efd;
+            transform: translateX(5px);
+        }
+        .sidebar .nav-link.active {
+            background-color: #0d6efd;
+            color: #fff !important;
+            font-weight: 600;
+        }
+        .sidebar .nav-link.active i {
+            transform: scale(1.2);
+            color: #fff !important;
+        }
+
         /* Konten utama */
         .content {
-            margin-left: 250px;
-            padding: 30px;
+            margin-left: 240px;
+            padding: 30px 35px;
+            transition: margin-left 0.3s ease;
         }
-        /* Navbar modern */
+
+        /* Navbar Modern */
         .navbar-custom {
-            margin-left: 250px;
-            background: linear-gradient(90deg, #0d6efd, #0b5ed7);
-            color: #fff;
+            margin-left: 240px;
+            background: #fff;
             padding: 12px 25px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
             position: sticky;
             top: 0;
             z-index: 1030;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 0 0 12px 12px;
         }
         .navbar-title {
-            font-size: 1.2rem;
+            font-size: 1.25rem;
             font-weight: 600;
             margin: 0;
+            color: #0d6efd;
         }
         .user-menu {
             display: flex;
@@ -46,15 +88,49 @@
             cursor: pointer;
         }
         .user-avatar {
-            width: 35px;
-            height: 35px;
+            width: 38px;
+            height: 38px;
             border-radius: 50%;
-            background: #fff;
-            color: #0d6efd;
+            background: #0d6efd;
+            color: #fff;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: 600;
+            font-size: 1rem;
+        }
+        .dropdown-menu {
+            border-radius: 0.75rem;
+            min-width: 200px;
+            padding: 0.5rem 0;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        .dropdown-item:hover {
+            background-color: #e7f1ff;
+            color: #0d6efd;
+        }
+
+        /* Scrollbar modern untuk sidebar */
+        .sidebar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .sidebar::-webkit-scrollbar-thumb {
+            background-color: rgba(0,0,0,0.2);
+            border-radius: 3px;
+        }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            .sidebar {
+                width: 60px;
+            }
+            .content {
+                margin-left: 60px;
+                padding: 20px 15px;
+            }
+            .sidebar .nav-link span {
+                display: none;
+            }
         }
     </style>
 </head>
@@ -65,7 +141,7 @@
     </div>
 
     {{-- Navbar atas --}}
-    <div class="navbar-custom d-flex justify-content-between align-items-center">
+    <div class="navbar-custom">
         <h5 class="navbar-title">@yield('title')</h5>
 
         @if(Auth::guard('petugas')->check() || Auth::guard('admin')->check())

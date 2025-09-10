@@ -26,7 +26,7 @@ class RedirectIfAuthenticated
                     case 'petugas':
                         return redirect()->route('petugas.dashboard');
                     case 'masyarakat':
-                        return redirect()->route('user.dashboard');
+                        return redirect()->route('home');
                     default:
                         return redirect('/');
                 }

@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Dashboard Pengaduan')
+@section('title', 'Home')
 
 @section('content')
 <div class="container py-5">
@@ -15,50 +15,44 @@
                 Aplikasi Pengaduan Masyarakat membantu Anda menyampaikan aspirasi dan melaporkan masalah di lingkungan sekitar dengan cepat dan mudah.
             </p>
             @auth('masyarakat')
-                <a href="{{ route('pengaduan.create') }}" class="btn btn-lg btn-primary shadow-sm mt-3">
+                <a href="{{ route('pengaduan.create') }}" class="btn btn-lg btn-primary shadow-sm rounded-pill mt-3">
                     <i class="bi bi-plus-circle me-2"></i> Buat Pengaduan
                 </a>
             @else
-                {{-- Trigger Modal Login --}}
-                <button class="btn btn-lg btn-outline-primary shadow-sm mt-3" data-bs-toggle="modal" data-bs-target="#authModal">
+                <button class="btn btn-lg btn-outline-primary shadow-sm rounded-pill mt-3" data-bs-toggle="modal" data-bs-target="#authModal">
                     <i class="bi bi-box-arrow-in-right me-2"></i> Login untuk Mengadu
                 </button>
             @endauth
         </div>
         <div class="col-md-6 text-center">
-            <img src="https://cdn-icons-png.flaticon.com/512/4140/4140048.png"
-                 alt="Ilustrasi Orang"
-                 class="img-fluid"
-                 style="max-height: 300px;">
+            <img src="https://cdn-icons-png.flaticon.com/512/4144/4144517.png" 
+                alt="Ilustrasi Pengaduan" 
+                class="img-fluid rounded-4" 
+                style="max-height: 400px;">
         </div>
     </div>
 
     {{-- Statistik Section --}}
-    <div class="row text-center mb-5">
-        <div class="col-md-4 mb-3">
-            <div class="card shadow border-0 rounded-4 h-100">
-                <div class="card-body py-4">
-                    <h5 class="card-title text-muted">Total User</h5>
-                    <h2 class="fw-bold text-primary">{{ $totalUser ?? 0 }}</h2>
-                </div>
+    <div class="row text-center mb-5 g-4">
+        <div class="col-md-4">
+            <div class="card shadow-lg border-0 rounded-4 h-100 p-4 text-center">
+                <i class="bi bi-people-fill fs-1 text-primary mb-2"></i>
+                <h5 class="text-muted mb-1">Total User</h5>
+                <h2 class="fw-bold text-primary">{{ $totalUser ?? 0 }}</h2>
             </div>
         </div>
-
-        <div class="col-md-4 mb-3">
-            <div class="card shadow border-0 rounded-4 h-100">
-                <div class="card-body py-4">
-                    <h5 class="card-title text-muted">Total Pengaduan</h5>
-                    <h2 class="fw-bold text-success">{{ $totalPengaduan ?? 0 }}</h2>
-                </div>
+        <div class="col-md-4">
+            <div class="card shadow-lg border-0 rounded-4 h-100 p-4 text-center">
+                <i class="bi bi-journal-check fs-1 text-success mb-2"></i>
+                <h5 class="text-muted mb-1">Total Pengaduan</h5>
+                <h2 class="fw-bold text-success">{{ $totalPengaduan ?? 0 }}</h2>
             </div>
         </div>
-
-        <div class="col-md-4 mb-3">
-            <div class="card shadow border-0 rounded-4 h-100">
-                <div class="card-body py-4">
-                    <h5 class="card-title text-muted">Pengaduan Selesai</h5>
-                    <h2 class="fw-bold text-info">{{ $pengaduanSelesai ?? 0 }}</h2>
-                </div>
+        <div class="col-md-4">
+            <div class="card shadow-lg border-0 rounded-4 h-100 p-4 text-center">
+                <i class="bi bi-check-circle fs-1 text-info mb-2"></i>
+                <h5 class="text-muted mb-1">Pengaduan Selesai</h5>
+                <h2 class="fw-bold text-info">{{ $pengaduanSelesai ?? 0 }}</h2>
             </div>
         </div>
     </div>
@@ -67,10 +61,10 @@
     <div class="row justify-content-center mt-5">
         <div class="col-md-8">
             <h3 class="fw-bold text-center mb-4">❓ Frequently Asked Questions</h3>
-            <div class="accordion" id="faqAccordion">
+            <div class="accordion shadow-sm rounded-4" id="faqAccordion">
                 <div class="accordion-item">
                     <h2 class="accordion-header" id="faq1">
-                        <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                        <button class="accordion-button fw-semibold" type="button" data-bs-toggle="collapse"
                                 data-bs-target="#collapse1" aria-expanded="true" aria-controls="collapse1">
                             Bagaimana cara membuat pengaduan?
                         </button>
@@ -81,10 +75,9 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="accordion-item">
                     <h2 class="accordion-header" id="faq2">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                        <button class="accordion-button collapsed fw-semibold" type="button" data-bs-toggle="collapse"
                                 data-bs-target="#collapse2" aria-expanded="false" aria-controls="collapse2">
                             Apakah saya bisa melacak status pengaduan?
                         </button>
@@ -95,10 +88,9 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="accordion-item">
                     <h2 class="accordion-header" id="faq3">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                        <button class="accordion-button collapsed fw-semibold" type="button" data-bs-toggle="collapse"
                                 data-bs-target="#collapse3" aria-expanded="false" aria-controls="collapse3">
                             Siapa yang menangani laporan saya?
                         </button>
@@ -114,4 +106,28 @@
     </div>
 
 </div>
+
+{{-- Custom CSS --}}
+<style>
+/* Card Statistik Modern */
+.card h2 {
+    font-size: 2rem;
+    margin-bottom: 0;
+}
+.card i {
+    transition: transform 0.3s ease;
+}
+.card:hover i {
+    transform: scale(1.2);
+}
+
+/* Tombol Hero Modern */
+.btn-primary, .btn-outline-primary {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.btn-primary:hover, .btn-outline-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+</style>
 @endsection
