@@ -29,14 +29,14 @@
         </a>
     </li>
     
-    <!-- {{-- Verifikasi & Laporan --}}
+    {{-- Laporan --}}
     <li class="nav-item mb-2">
         <a href="{{ Auth::guard('admin')->check() ? route('admin.laporan') : route('petugas.laporan') }}" 
            class="nav-link d-flex align-items-center {{ request()->routeIs(Auth::guard('admin')->check() ? 'admin.laporan' : 'petugas.laporan') ? 'active' : '' }}">
-            <i class="bi bi-check2-circle me-2"></i> <span class="menu-text">Verifikasi & Laporan</span>
+            <i class="bi bi-check2-circle me-2"></i> <span class="menu-text">Laporan</span>
         </a>
-    </li> -->
-    
+    </li>
+
         {{-- Register Petugas (khusus admin) --}}
         @if(Auth::guard('admin')->check())
         <li class="nav-item mb-2">

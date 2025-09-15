@@ -1,6 +1,6 @@
 @extends(Auth::guard('admin')->check() ? 'admin.layouts.app' : 'admin.layouts.app')
 
-@section('title', 'Verifikasi & Laporan')
+@section('title', 'Laporan')
 
 @section('content')
 <div class="container-fluid py-3">
@@ -10,7 +10,7 @@
         <div class="mb-4 p-3 rounded-4 shadow-sm d-flex justify-content-between align-items-center" style="background-color:#ffffff;">
             <div class="d-flex align-items-center gap-2">
                 <i class="bi bi-check2-circle fs-4 text-primary"></i>
-                <h5 class="mb-0 fw-bold text-primary">Verifikasi & Laporan</h5>
+                <h5 class="mb-0 fw-bold text-primary">Laporan</h5>
             </div>
 
             @if(Auth::guard('admin')->check())
@@ -30,7 +30,7 @@
         </div>
     </div>
 
-    {{-- Tabel Modern --}}
+    <!-- {{-- Tabel Modern --}}
     <div class="card shadow-sm border-0 rounded-4">
         <div class="card-body p-3">
             <div class="table-responsive">
@@ -114,7 +114,7 @@
             </div>
         </div>
     </div>
-</div>
+</div> -->
 
 {{-- Custom CSS --}}
 <style>
