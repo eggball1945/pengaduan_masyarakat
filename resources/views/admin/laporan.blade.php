@@ -13,7 +13,7 @@
                 <h5 class="mb-0 fw-bold text-primary">Laporan</h5>
             </div>
 
-            @if(Auth::guard('admin')->check())
+            <!-- @if(Auth::guard('admin')->check())
             <div class="d-flex gap-2">
                 <a href="{{ route('admin.laporan.export.pdf') }}" 
                    class="btn btn-outline-danger btn-sm d-flex align-items-center gap-1 rounded-pill shadow-sm"
@@ -26,7 +26,7 @@
                     <i class="bi bi-file-earmark-excel"></i> Excel
                 </a>
             </div>
-            @endif
+            @endif -->
         </div>
     </div>
 

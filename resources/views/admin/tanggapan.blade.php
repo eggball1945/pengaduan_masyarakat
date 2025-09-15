@@ -9,6 +9,19 @@
         <div class="mb-4 p-3 rounded-4 shadow-sm d-flex align-items-center gap-3" style="background-color:#ffffff;">
             <i class="bi bi-journal-text fs-4 text-primary"></i>
             <h5 class="mb-0 fw-bold text-primary">Data Tanggapan Pengaduan</h5>
+        
+        <div class="d-flex gap-2">
+                <a href="{{ route('admin.laporan.export.pdf') }}" 
+                   class="btn btn-outline-danger btn-sm d-flex align-items-center gap-1 rounded-pill shadow-sm"
+                   style="transition: all 0.2s;">
+                    <i class="bi bi-file-earmark-pdf"></i> PDF
+                </a>
+                <a href="{{ route('admin.laporan.export.excel') }}" 
+                   class="btn btn-outline-success btn-sm d-flex align-items-center gap-1 rounded-pill shadow-sm"
+                   style="transition: all 0.2s;">
+                    <i class="bi bi-file-earmark-excel"></i> Excel
+                </a>
+        </div>    
         </div>
     </div>
 

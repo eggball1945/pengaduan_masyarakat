@@ -157,13 +157,13 @@ footer a:hover {
                             <span class="fw-semibold">{{ Auth::guard('masyarakat')->user()->nama }}</span>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end shadow-lg rounded-3 border-0" aria-labelledby="userDropdown">
-                            <li>
+                            <!-- <li>
                                 <a class="dropdown-item d-flex align-items-center gap-2" href="{{ route('pengaduan.index') }}">
                                     <i class="bi bi-list-task fs-5 text-primary"></i>
                                     <span>Data Pengaduan</span>
                                 </a>
                             </li>
-                            <li><hr class="dropdown-divider"></li>
+                            <li><hr class="dropdown-divider"></li> -->
                             <li>
                                 <form action="{{ route('logout') }}" method="POST" class="m-0">
                                     @csrf

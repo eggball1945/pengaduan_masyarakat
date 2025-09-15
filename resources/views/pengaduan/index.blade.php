@@ -13,6 +13,10 @@
             <a href="{{ route('pengaduan.create') }}" class="btn btn-lg btn-primary shadow-sm rounded-pill px-4">
                 <i class="bi bi-plus-circle me-2"></i> Buat Pengaduan
             </a>
+            <br>
+            <a href="{{ route('home') }}" class="btn btn-lg btn-primary shadow-sm rounded-pill px-4">
+                <i class="bi bi-house-door-fill me-1"></i> Home
+            </a>
         </div>
     @endif
 
