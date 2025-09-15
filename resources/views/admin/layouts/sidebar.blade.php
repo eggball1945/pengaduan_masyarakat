@@ -20,28 +20,29 @@
             </a>
         </li>
 
-        {{-- Verifikasi & Laporan --}}
-        <li class="nav-item mb-2">
-            <a href="{{ Auth::guard('admin')->check() ? route('admin.laporan') : route('petugas.laporan') }}" 
-               class="nav-link d-flex align-items-center {{ request()->routeIs(Auth::guard('admin')->check() ? 'admin.laporan' : 'petugas.laporan') ? 'active' : '' }}">
-                <i class="bi bi-check2-circle me-2"></i> <span class="menu-text">Verifikasi & Laporan</span>
-            </a>
-        </li>
-
+        
         {{-- Tanggapan --}}
         <li class="nav-item mb-2">
             <a href="{{ Auth::guard('admin')->check() ? route('admin.tanggapan.index') : route('petugas.tanggapan.index') }}" 
-               class="nav-link d-flex align-items-center {{ request()->routeIs(Auth::guard('admin')->check() ? 'admin.tanggapan.*' : 'petugas.tanggapan.*') ? 'active' : '' }}">
-                <i class="bi bi-chat-left-text me-2"></i> <span class="menu-text">Berikan Tanggapan</span>
-            </a>
-        </li>
-
+            class="nav-link d-flex align-items-center {{ request()->routeIs(Auth::guard('admin')->check() ? 'admin.tanggapan.*' : 'petugas.tanggapan.*') ? 'active' : '' }}">
+            <i class="bi bi-chat-left-text me-2"></i> <span class="menu-text">Berikan Tanggapan</span>
+        </a>
+    </li>
+    
+    <!-- {{-- Verifikasi & Laporan --}}
+    <li class="nav-item mb-2">
+        <a href="{{ Auth::guard('admin')->check() ? route('admin.laporan') : route('petugas.laporan') }}" 
+           class="nav-link d-flex align-items-center {{ request()->routeIs(Auth::guard('admin')->check() ? 'admin.laporan' : 'petugas.laporan') ? 'active' : '' }}">
+            <i class="bi bi-check2-circle me-2"></i> <span class="menu-text">Verifikasi & Laporan</span>
+        </a>
+    </li> -->
+    
         {{-- Register Petugas (khusus admin) --}}
         @if(Auth::guard('admin')->check())
         <li class="nav-item mb-2">
             <a href="{{ route('admin.register') }}" 
                class="nav-link d-flex align-items-center {{ request()->routeIs('admin.register') || request()->routeIs('admin.register.*') ? 'active' : '' }}">
-                <i class="bi bi-person-plus me-2"></i> <span class="menu-text">Register Petugas</span>
+                <i class="bi bi-person-plus me-2"></i> <span class="menu-text">Manajemen Petugas</span>
             </a>
         </li>
         @endif

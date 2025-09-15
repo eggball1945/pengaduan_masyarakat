@@ -62,107 +62,6 @@
     </div>
 </section>
 
-{{-- FAQ Section --}}
-<section class="faq-section py-5 bg-light">
-    <div class="container">
-        <div class="row justify-content-center mt-5 fade-in">
-            <div class="col-md-8">
-                <h3 class="fw-bold text-center mb-4">❓ Frequently Asked Questions</h3>
-                <div class="accordion shadow-sm rounded-4 overflow-hidden" id="faqAccordion">
-                    <div class="accordion-item">
-                        <h2 class="accordion-header" id="faq1">
-                            <button class="accordion-button fw-semibold" type="button" data-bs-toggle="collapse"
-                                    data-bs-target="#collapse1" aria-expanded="true" aria-controls="collapse1">
-                                Bagaimana cara membuat pengaduan?
-                            </button>
-                        </h2>
-                        <div id="collapse1" class="accordion-collapse collapse show" aria-labelledby="faq1" data-bs-parent="#faqAccordion">
-                            <div class="accordion-body">
-                                Login terlebih dahulu, lalu klik tombol <strong>Buat Pengaduan</strong> dan isi form yang tersedia.
-                            </div>
-                        </div>
-                    </div>
-                    <div class="accordion-item">
-                        <h2 class="accordion-header" id="faq2">
-                            <button class="accordion-button collapsed fw-semibold" type="button" data-bs-toggle="collapse"
-                                    data-bs-target="#collapse2" aria-expanded="false" aria-controls="collapse2">
-                                Apakah saya bisa melacak status pengaduan?
-                            </button>
-                        </h2>
-                        <div id="collapse2" class="accordion-collapse collapse" aria-labelledby="faq2" data-bs-parent="#faqAccordion">
-                            <div class="accordion-body">
-                                Ya, Anda bisa melihat status pengaduan pada halaman <strong>Data Pengaduan</strong>.
-                            </div>
-                        </div>
-                    </div>
-                    <div class="accordion-item">
-                        <h2 class="accordion-header" id="faq3">
-                            <button class="accordion-button collapsed fw-semibold" type="button" data-bs-toggle="collapse"
-                                    data-bs-target="#collapse3" aria-expanded="false" aria-controls="collapse3">
-                                Siapa yang menangani laporan saya?
-                            </button>
-                        </h2>
-                        <div id="collapse3" class="accordion-collapse collapse" aria-labelledby="faq3" data-bs-parent="#faqAccordion">
-                            <div class="accordion-body">
-                                Pengaduan Anda akan ditangani oleh <strong>Petugas</strong> yang ditunjuk dan diverifikasi oleh <strong>Admin</strong>.
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-{{-- Alur Pengaduan --}}
-<section class="alur-section py-5">
-    <div class="container">
-        <div class="bg-white shadow-lg rounded-4 p-5">
-            <h3 class="fw-bold text-center mb-5 text-dark">Alur Pengaduan</h3>
-            <div class="alur-wrapper fade-in">
-                <div class="row text-center justify-content-center position-relative">
-                    <div class="col-6 col-md-3">
-                        <div class="alur-step">
-                            <div class="alur-icon text-primary">
-                                <i class="bi bi-box-arrow-in-right"></i>
-                            </div>
-                            <h6 class="fw-semibold mt-2">1. Login / Register</h6>
-                            <p class="text-muted small">Masuk atau daftar akun terlebih dahulu untuk mulai membuat pengaduan.</p>
-                        </div>
-                    </div>
-                    <div class="col-6 col-md-3">
-                        <div class="alur-step">
-                            <div class="alur-icon text-success">
-                                <i class="bi bi-plus-circle"></i>
-                            </div>
-                            <h6 class="fw-semibold mt-2">2. Buat Pengaduan</h6>
-                            <p class="text-muted small">Klik tombol <strong>Buat Pengaduan</strong> dan isi form dengan jelas.</p>
-                        </div>
-                    </div>
-                    <div class="col-6 col-md-3">
-                        <div class="alur-step">
-                            <div class="alur-icon text-warning">
-                                <i class="bi bi-arrow-repeat"></i>
-                            </div>
-                            <h6 class="fw-semibold mt-2">3. Diverifikasi</h6>
-                            <p class="text-muted small">Pengaduan akan diverifikasi dan ditangani oleh <strong>Petugas</strong>.</p>
-                        </div>
-                    </div>
-                    <div class="col-6 col-md-3">
-                        <div class="alur-step">
-                            <div class="alur-icon text-info">
-                                <i class="bi bi-check-circle"></i>
-                            </div>
-                            <h6 class="fw-semibold mt-2">4. Selesai</h6>
-                            <p class="text-muted small">Status laporan dapat dipantau hingga pengaduan <strong>selesai</strong>.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
 {{-- Bottom Bar (Mobile) --}}
 <div class="bottom-bar bg-white border-top shadow-sm fixed-bottom">
     <div class="d-flex justify-content-between align-items-center px-3 py-2">
@@ -178,7 +77,7 @@
             <i class="bi bi-instagram fs-4"></i>
             <div class="small">Instagram</div>
         </a>
-        <a href="https://wa.me/6281234567890" target="_blank" class="text-decoration-none text-success mx-2">
+        <a href="https://wa.me/6289630786654" target="_blank" class="text-decoration-none text-success mx-2">
             <i class="bi bi-whatsapp fs-4"></i>
             <div class="small">WhatsApp</div>
         </a>

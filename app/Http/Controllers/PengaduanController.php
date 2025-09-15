@@ -12,19 +12,28 @@ class PengaduanController extends Controller
 {
     public function __construct()
     {
-        // Semua user yang login (masyarakat/admin/petugas)
+        // Hanya untuk user login (masyarakat/petugas/admin)
         $this->middleware('auth:masyarakat,petugas,admin');
     }
 
     // ==========================
-    // MASYARAKAT
+    // INDEX (LISTING)
     // ==========================
     public function index()
     {
-        // Semua pengaduan ditampilkan
-        $pengaduans = Pengaduan::with('tanggapan.petugas')
-            ->orderBy('tgl_pengaduan', 'desc')
-            ->get();
+        if (Auth::guard('masyarakat')->check()) {
+            // Masyarakat hanya melihat pengaduan miliknya sendiri
+            $nik = Auth::guard('masyarakat')->user()->nik;
+            $pengaduans = Pengaduan::with('tanggapan.petugas')
+                ->where('nik', $nik)
+                ->orderBy('tgl_pengaduan', 'desc')
+                ->get();
+        } else {
+            // Admin / Petugas bisa lihat semua
+            $pengaduans = Pengaduan::with('tanggapan.petugas')
+                ->orderBy('tgl_pengaduan', 'desc')
+                ->get();
+        }
 
         return view('pengaduan.index', compact('pengaduans'));
     }
@@ -63,6 +72,9 @@ class PengaduanController extends Controller
         return redirect()->route('pengaduan.index')->with('success', 'Pengaduan berhasil dikirim!');
     }
 
+    // ==========================
+    // EDIT & UPDATE
+    // ==========================
     public function edit($id)
     {
         $pengaduan = Pengaduan::findOrFail($id);
@@ -79,7 +91,7 @@ class PengaduanController extends Controller
     {
         $pengaduan = Pengaduan::findOrFail($id);
 
-        // Update oleh masyarakat
+        // Update oleh masyarakat (hanya isi_laporan + foto)
         if (Auth::guard('masyarakat')->check()) {
             if ($pengaduan->nik !== Auth::guard('masyarakat')->user()->nik) {
                 abort(403, 'Tidak boleh mengedit pengaduan orang lain.');
@@ -91,6 +103,7 @@ class PengaduanController extends Controller
             ]);
 
             if ($request->hasFile('foto')) {
+                // hapus foto lama
                 if ($pengaduan->foto) {
                     $oldFiles = json_decode($pengaduan->foto, true) ?? [];
                     foreach ($oldFiles as $old) {
@@ -121,7 +134,6 @@ class PengaduanController extends Controller
             $pengaduan->status = $request->status;
             $pengaduan->save();
 
-            // update atau buat tanggapan
             $petugas = Auth::guard('admin')->user() ?? Auth::guard('petugas')->user();
 
             Tanggapan::updateOrCreate(
@@ -140,20 +152,17 @@ class PengaduanController extends Controller
     }
 
     // ==========================
-    // HAPUS PENGADUAN
+    // HAPUS
     // ==========================
     public function destroy($id)
     {
         $pengaduan = Pengaduan::findOrFail($id);
 
-        // Masyarakat hanya boleh hapus miliknya sendiri
         if (Auth::guard('masyarakat')->check() &&
             $pengaduan->nik !== Auth::guard('masyarakat')->user()->nik) {
             abort(403, 'Tidak boleh menghapus pengaduan orang lain.');
         }
 
-        // Admin/petugas boleh hapus semua
-        // Hapus file foto jika ada
         if ($pengaduan->foto) {
             $oldFiles = json_decode($pengaduan->foto, true) ?? [];
             foreach ($oldFiles as $old) {
